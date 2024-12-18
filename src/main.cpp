@@ -10,23 +10,9 @@
 #include "functions.h"
 
 int main() {
-  // auto word_counts = get_word_count("data/wiki-test.txt");
-
-  // for(const auto &[key, value]: word_counts) {
-  //   std::cout << key << " " << value << "\n";
-  // }
-
-  // auto cross_ref =  get_cross_ref("data/wiki-test.txt");
-
-  // for(auto it = cross_ref.begin(); it != cross_ref.end(); it++) {
-  //   std::cout << it->first << " " << it->second << std::endl;
-  // }
-
-  // auto set_urls = get_url_adresses("data/url-test.txt");
-  // for(auto s: set_urls)
-  //   std::cout << s << std::endl;
-
+  output_word_counts("data/wiki-test.txt", "output/word-counts.txt");
   output_word_cross_ref("data/wiki-test.txt", "output/cross-ref.txt");
+  output_url_addresses("data/url-test.txt", "output/urls.txt");
 
   return 0;
 }
