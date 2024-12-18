@@ -1,7 +1,12 @@
 #include <iostream>
+#include <regex>
+
 #include <map>
+#include <set>
+
 #include <fstream>
 #include <sstream>
+
 #include "functions.h"
 
 int main() {
@@ -11,11 +16,15 @@ int main() {
   //   std::cout << key << " " << value << "\n";
   // }
 
-  auto cross_ref =  get_cross_ref("data/wiki-test.txt");
+  // auto cross_ref =  get_cross_ref("data/wiki-test.txt");
 
-  for(auto it = cross_ref.begin(); it != cross_ref.end(); it++) {
-    std::cout << it->first << " " << it->second << std::endl;
-  }
+  // for(auto it = cross_ref.begin(); it != cross_ref.end(); it++) {
+  //   std::cout << it->first << " " << it->second << std::endl;
+  // }
+
+  auto set_urls = get_url_adresses("data/url-test.txt");
+  for(auto s: set_urls)
+    std::cout << s << std::endl;
 
   return 0;
 }
@@ -105,4 +114,20 @@ std::multimap<std::string, int> get_cross_ref(std::string file_path){
 
   fd.close();
   return output_map;
+}
+
+std::set<std::string> get_url_adresses(std::string file_path) {
+  std::set<std::string> set_urls;
+  std::ifstream fd(file_path);
+  std::string tmp_string;
+  const std::regex pattern("(https?://)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]+\\.[a-zA-Z0-9()]{1,}");
+
+  while(!fd.eof()) {
+    fd >> tmp_string;
+
+    if(std::regex_match(tmp_string, pattern)) 
+      set_urls.insert(tmp_string);
+  }
+
+  return set_urls;
 }
