@@ -42,13 +42,19 @@ std::map<std::string, int> get_word_count(std::string file_path) {
       output_map.emplace(tmp_string, 1);
     }
   }
-
   fd.close();
+
+  // Istrinti narius, pasikartojancius viena karta
+  for (auto &[key, value]: output_map)
+    if(value <= 1) 
+      output_map.erase(key);
+
   return output_map;
 }
 
 std::multimap<std::string, int> get_cross_ref(std::string file_path){
   std::multimap<std::string, int> output_map;
+  std::map<std::string, bool> repeats;
 
   std::ifstream fd(file_path);
 
@@ -73,13 +79,28 @@ std::multimap<std::string, int> get_cross_ref(std::string file_path){
       auto search = tmp_map.find(tmp_string);
       if(search == tmp_map.end()) {
         tmp_map.emplace(tmp_string, 0);
+
         auto new_pair = std::make_pair(tmp_string, counter);
         output_map.insert(new_pair);
-      }
+      } 
 
+      auto rep_search = repeats.find(tmp_string);
+
+      if(rep_search != repeats.end()) {
+        repeats[tmp_string] = true;
+      } else {
+        repeats.emplace(tmp_string, false);
+      }
     }
 
     counter++;
+  }
+
+  for(auto it = output_map.begin(); it != output_map.end(); it++) {
+    auto search_in_repeat = repeats.find(it->first);
+
+    if(search_in_repeat->second) continue;
+    else output_map.erase(search_in_repeat->first);
   }
 
   fd.close();
